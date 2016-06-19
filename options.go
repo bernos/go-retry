@@ -13,31 +13,31 @@ type BackoffFunc func(iteration uint, baseDelay, maxDelay time.Duration) time.Du
 
 // BaseDelay sets the base delay time between retry attempts. By default the base
 // delay is set to the value of DefaultBaseDelay
-func BaseDelay(d time.Duration) func(*Retrier) {
-	return func(r *Retrier) {
+func BaseDelay(d time.Duration) func(*Options) {
+	return func(r *Options) {
 		r.BaseDelay = d
 	}
 }
 
 // Forever configures the Retrier to retry forever
-func Forever() func(*Retrier) {
-	return func(r *Retrier) {
+func Forever() func(*Options) {
+	return func(r *Options) {
 		r.MaxRetries = Infinity
 	}
 }
 
 // MaxRetries sets the maximum number of times the Retrier will retry. By default the
 // maximum number of retries is set to the value of DefaultMaxRetries
-func MaxRetries(n int) func(*Retrier) {
-	return func(r *Retrier) {
+func MaxRetries(n int) func(*Options) {
+	return func(r *Options) {
 		r.MaxRetries = n
 	}
 }
 
 // MaxDelay sets the maximum time between retry attempts. By default the maximum delay
 // time is set to the value of DefaultMaxDelay
-func MaxDelay(d time.Duration) func(*Retrier) {
-	return func(r *Retrier) {
+func MaxDelay(d time.Duration) func(*Options) {
+	return func(r *Options) {
 		r.MaxDelay = d
 	}
 }
@@ -47,16 +47,16 @@ func MaxDelay(d time.Duration) func(*Retrier) {
 // retried. The function passed to While is checked only if the maximum retry
 // count has not already been passed. By default the function will be retried
 // if the value of error is not nil
-func While(fn func(error) bool) func(*Retrier) {
-	return func(r *Retrier) {
+func While(fn func(error) bool) func(*Options) {
+	return func(r *Options) {
 		r.ShouldRetry = fn
 	}
 }
 
 // Backoff specifies the BackoffFunc used to calculate the interval between
 // retry attempts. By default the BinaryExponentialBackoff function is used
-func Backoff(fn BackoffFunc) func(*Retrier) {
-	return func(r *Retrier) {
+func Backoff(fn BackoffFunc) func(*Options) {
+	return func(r *Options) {
 		r.CalculateDelay = fn
 	}
 }
@@ -64,15 +64,15 @@ func Backoff(fn BackoffFunc) func(*Retrier) {
 // BinaryExponentialBackoff configures the Retrier to use the binary exponential
 // backoff function when calculating the time between retry attempts. This is the
 // default func used if no user defined backoff func is supplied
-func BinaryExponentialBackoff() func(*Retrier) {
+func BinaryExponentialBackoff() func(*Options) {
 	return Backoff(calculateBinaryExponentialDelay)
 }
 
 // Log specifies a function to use to log retry attempts. Log messages will
 // be sent when the a retry is performed, and when the retry interval is
 // calculated
-func Log(fn func(format string, v ...interface{})) func(*Retrier) {
-	return func(r *Retrier) {
+func Log(fn func(format string, v ...interface{})) func(*Options) {
+	return func(r *Options) {
 		r.Log = fn
 	}
 }

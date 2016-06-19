@@ -18,8 +18,8 @@ var (
 	DefaultBackoffFunc = BinaryExponentialBackoff()
 )
 
-// Retrier holds options for retrying
-type Retrier struct {
+// Options holds options for retrying
+type Options struct {
 	MaxRetries     int
 	BaseDelay      time.Duration
 	MaxDelay       time.Duration
@@ -32,8 +32,8 @@ type Retrier struct {
 // it succeeds, or until a max retry count or timeout is exceeded. options funcs
 // can be used to configure properties of the wrapper func, such as max retry
 // attempts, which backoff algrorithm to use and so forth.
-func Retry(fn func() (interface{}, error), options ...func(*Retrier)) func() (interface{}, error) {
-	r := Retrier{
+func Retry(fn func() (interface{}, error), options ...func(*Options)) func() (interface{}, error) {
+	r := Options{
 		BaseDelay:   DefaultBaseDelay,
 		MaxDelay:    DefaultMaxDelay,
 		MaxRetries:  DefaultMaxRetries,

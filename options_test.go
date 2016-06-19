@@ -7,7 +7,7 @@ import (
 )
 
 func TestBaseDelay(t *testing.T) {
-	r := &Retrier{}
+	r := &Options{}
 
 	BaseDelay(time.Second)(r)
 
@@ -17,7 +17,7 @@ func TestBaseDelay(t *testing.T) {
 }
 
 func TestForever(t *testing.T) {
-	r := &Retrier{}
+	r := &Options{}
 
 	Forever()(r)
 
@@ -27,7 +27,7 @@ func TestForever(t *testing.T) {
 }
 
 func TestMaxDelay(t *testing.T) {
-	r := &Retrier{}
+	r := &Options{}
 
 	MaxDelay(time.Hour)(r)
 
@@ -37,7 +37,7 @@ func TestMaxDelay(t *testing.T) {
 }
 
 func TestExponentialBackoff(t *testing.T) {
-	r := &Retrier{}
+	r := &Options{}
 
 	BinaryExponentialBackoff()(r)
 
