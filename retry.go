@@ -22,6 +22,10 @@ type Retrier struct {
 	Log            func(string, ...interface{})
 }
 
+// Retry wraps a func, returning a new func that will retry the wrapped func until
+// it succeeds, or until a max retry count or timeout is exceeded. options funcs
+// can be used to configure properties of the wrapper func, such as max retry
+// attempts, which backoff algrorithm to use and so forth.
 func Retry(fn func() (interface{}, error), options ...func(*Retrier)) func() (interface{}, error) {
 	r := Retrier{
 		BaseDelay:      DefaultBaseDelay,

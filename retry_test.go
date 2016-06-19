@@ -8,6 +8,27 @@ import (
 	"time"
 )
 
+func ExampleRetry() {
+	count := 0
+
+	fn := func() (interface{}, error) {
+		if count < 2 {
+			count++
+			fmt.Printf("%d, ", count)
+			return nil, fmt.Errorf("gimme at least 2")
+		}
+		return "Thats more like it!", nil
+	}
+
+	r := Retry(fn)
+
+	v, err := r()
+
+	fmt.Printf("%s, %v", v, err)
+
+	// Output: 1, 2, Thats more like it!, <nil>
+}
+
 func TestCalculateDelayBinary(t *testing.T) {
 	maxInt := int((^uint(0)) >> 1)
 
