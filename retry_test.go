@@ -8,27 +8,6 @@ import (
 	"time"
 )
 
-func ExampleRetry() {
-	count := 0
-
-	fn := func() (interface{}, error) {
-		if count < 2 {
-			count++
-			fmt.Printf("%d, ", count)
-			return nil, fmt.Errorf("gimme at least 2")
-		}
-		return "Thats more like it!", nil
-	}
-
-	r := Retry(fn)
-
-	v, err := r()
-
-	fmt.Printf("%s, %v", v, err)
-
-	// Output: 1, 2, Thats more like it!, <nil>
-}
-
 func TestCalculateDelayBinary(t *testing.T) {
 	maxInt := int((^uint(0)) >> 1)
 
@@ -46,7 +25,7 @@ func TestCalculateDelayBinary(t *testing.T) {
 		last := time.Duration(0)
 
 		for i := test.min; i < test.max; i++ {
-			d := calculateDelayBinary(uint(i), test.baseDelay, test.maxDelay)
+			d := calculateBinaryExponentialDelay(uint(i), test.baseDelay, test.maxDelay)
 			if d < 0 || d < last || d > test.maxDelay {
 				t.Errorf("calculateDelayBinary(%d, %s, %s) -> got %d", i, test.baseDelay, test.maxDelay, d)
 			}

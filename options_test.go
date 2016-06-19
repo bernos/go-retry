@@ -39,9 +39,9 @@ func TestMaxDelay(t *testing.T) {
 func TestExponentialBackoff(t *testing.T) {
 	r := &Retrier{}
 
-	ExponentialBackoff()(r)
+	BinaryExponentialBackoff()(r)
 
-	if r.CalculateDelay(5, time.Millisecond, time.Minute) != calculateDelayBinary(5, time.Millisecond, time.Minute) {
+	if r.CalculateDelay(5, time.Millisecond, time.Minute) != calculateBinaryExponentialDelay(5, time.Millisecond, time.Minute) {
 		t.Errorf("Want calculateDelayBinary")
 	}
 }

@@ -1,3 +1,5 @@
+// Package retry implements a simple mechanism for retrying functions, with support for
+// specifying backoff strategies, timeout and retry limits
 package retry
 
 import (
@@ -10,6 +12,10 @@ const (
 	DefaultBaseDelay  = time.Millisecond
 	DefaultMaxDelay   = time.Minute
 	Infinity          = -1
+)
+
+var (
+	DefaultBackoffFunc = BinaryExponentialBackoff()
 )
 
 // Retrier holds options for retrying
@@ -28,13 +34,14 @@ type Retrier struct {
 // attempts, which backoff algrorithm to use and so forth.
 func Retry(fn func() (interface{}, error), options ...func(*Retrier)) func() (interface{}, error) {
 	r := Retrier{
-		BaseDelay:      DefaultBaseDelay,
-		MaxDelay:       DefaultMaxDelay,
-		MaxRetries:     DefaultMaxRetries,
-		ShouldRetry:    func(err error) bool { return true },
-		CalculateDelay: calculateDelayBinary,
-		Log:            func(format string, v ...interface{}) {},
+		BaseDelay:   DefaultBaseDelay,
+		MaxDelay:    DefaultMaxDelay,
+		MaxRetries:  DefaultMaxRetries,
+		ShouldRetry: func(err error) bool { return true },
+		Log:         func(format string, v ...interface{}) {},
 	}
+
+	DefaultBackoffFunc(&r)
 
 	for _, o := range options {
 		o(&r)

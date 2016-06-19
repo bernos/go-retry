@@ -8,6 +8,34 @@ import (
 	"github.com/bernos/go-retry"
 )
 
+func Example() {
+	count := 0
+
+	fn := func() (interface{}, error) {
+		count++
+
+		if count < 3 {
+			fmt.Println(count)
+			return nil, fmt.Errorf("gimme at least 2")
+		}
+		return "Thats more like it!", nil
+	}
+
+	r := retry.Retry(
+		fn,
+		retry.MaxRetries(5),
+		retry.BaseDelay(time.Nanosecond))
+
+	value, err := r()
+
+	fmt.Printf("%s, %v", value, err)
+
+	// Output:
+	// 1
+	// 2
+	// Thats more like it!, <nil>
+}
+
 func ExampleRetry() {
 	count := 0
 
@@ -75,7 +103,7 @@ func ExampleExponentialBackoff() {
 		return "foo", nil
 	}
 
-	r := retry.Retry(fn, retry.ExponentialBackoff())
+	r := retry.Retry(fn, retry.BinaryExponentialBackoff())
 
 	value, err := r()
 
