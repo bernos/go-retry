@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/bernos/go-retry.svg)](https://travis-ci.org/bernos/go-retry)&nbsp;[![GoDoc](https://godoc.org/github.com/bernos/go-retry?status.svg)](https://godoc.org/github.com/bernos/go-retry)
 
-Simple pkg for creating retryable funcs in go
+Simple pkg for creating retryable funcs in go. See simple example below. For more detail, check the [go docs](https://godoc.org/github.com/bernos/go-retry)
 
 ```go
 package main
